@@ -1,146 +1,148 @@
 
 import { readFileSync } from 'fs';
-import marked from 'marked';
 import { sanitizeHtml } from './sanitizer';
 import { ParsedRequest } from './types';
 const twemoji = require('twemoji');
 const twOptions = { folder: 'svg', ext: '.svg' };
 const emojify = (text: string) => twemoji.parse(text, twOptions);
 
-const rglr = readFileSync(`${__dirname}/../_fonts/Inter-Regular.woff2`).toString('base64');
-const bold = readFileSync(`${__dirname}/../_fonts/Inter-Bold.woff2`).toString('base64');
-const mono = readFileSync(`${__dirname}/../_fonts/Vera-Mono.woff2`).toString('base64');
+const etcTrispace = readFileSync(`${__dirname}/../_fonts/etc-trispace.woff2`).toString('base64');
+const ibmPlexSansItalic = readFileSync(`${__dirname}/../_fonts/IBMPlexSansVar-Italic.woff2`).toString('base64');
+const ibmPlexSans = readFileSync(`${__dirname}/../_fonts/IBMPlexSansVar-Roman.woff2`).toString('base64');
+const backgroundSvg = readFileSync(`${__dirname}/../_svgs/dashed.svg`).toString('utf8');
 
-function getCss(theme: string, fontSize: string) {
-    let background = 'white';
-    let foreground = 'black';
-    let radial = 'lightgray';
-
-    if (theme === 'dark') {
-        background = 'black';
-        foreground = 'white';
-        radial = 'dimgray';
-    }
+function getCss(theme: string) {
     return `
     @font-face {
-        font-family: 'Inter';
-        font-style:  normal;
-        font-weight: normal;
-        src: url(data:font/woff2;charset=utf-8;base64,${rglr}) format('woff2');
+        font-family: 'ETC Trispace';
+        src: url(data:font/woff2;charset=utf-8;base64,${etcTrispace}) format('woff2');
+        font-weight: 100 900;
+        font-stretch: 50% 200%;
+        font-display: swap;
     }
-
     @font-face {
-        font-family: 'Inter';
-        font-style:  normal;
-        font-weight: bold;
-        src: url(data:font/woff2;charset=utf-8;base64,${bold}) format('woff2');
+        font-family: 'IBM Plex Sans Var';
+        src: url(data:font/woff2;charset=utf-8;base64,${ibmPlexSansItalic}) format('woff2');
+        font-style: italic;
+        font-weight: 100 900;
+        font-stretch: 50% 200%;
+        font-display: swap;
     }
-
     @font-face {
-        font-family: 'Vera';
-        font-style: normal;
-        font-weight: normal;
-        src: url(data:font/woff2;charset=utf-8;base64,${mono})  format("woff2");
-      }
+        font-family: 'IBM Plex Sans Var';
+        src: url(data:font/woff2;charset=utf-8;base64,${ibmPlexSans})  format("woff2");
+        font-weight: 100 900;
+        font-stretch: 50% 200%;
+        font-display: swap;
+    }
+    html {
+        --color--background: #fff;
+        --color--sky: #d4e2ef;
+        --color--gold: #c38843;
+        --color--blue: #20599e;
+        --color--navy: #000650;
+        --color--text: var(--color--navy);
+    }
+    html.theme-dark {
+        --color--sky: #d49145;
+        --color--gold: #741a2e;
+        --color--blue: #bc3451;
+        --color--navy: #eccfac;
+        --color--background: #1b0d0f;
+    }
 
     body {
-        background: ${background};
-        background-image: radial-gradient(circle at 25px 25px, ${radial} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${radial} 2%, transparent 0%);
-        background-size: 100px 100px;
+        background: var(--color--background);
+        color: var(--color--text);
         height: 100vh;
         display: flex;
-        text-align: center;
         align-items: center;
         justify-content: center;
+        font-family: "IBM Plex Sans Var", monospace;
     }
-
-    code {
-        color: #D400FF;
-        font-family: 'Vera';
-        white-space: pre-wrap;
-        letter-spacing: -5px;
+    svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100vw;
     }
-
-    code:before, code:after {
-        content: '\`';
+    path[class^="c"] {
+        stroke-width: 2px;
+        vector-effect: non-scaling-stroke;
     }
-
-    .logo-wrapper {
-        display: flex;
-        align-items: center;
-        align-content: center;
-        justify-content: center;
-        justify-items: center;
+    .c0 {
+        stroke:var(--color--sky);
     }
-
-    .logo {
-        margin: 0 75px;
+    .c1 {
+        stroke:var(--color--gold);
     }
-
-    .plus {
-        color: #BBB;
-        font-family: Times New Roman, Verdana;
-        font-size: 100px;
+    .c2 {
+        stroke:var(--color--blue);
     }
-
-    .spacer {
-        margin: 150px;
+    .c3 {
+        stroke:var(--color--navy);
     }
-
-    .emoji {
-        height: 1em;
-        width: 1em;
-        margin: 0 .05em 0 .1em;
-        vertical-align: -0.1em;
+    .s1 {
+        stroke-dasharray: 2;
     }
-    
+    .s2 {
+        stroke-dasharray: 4;
+    }
+    .s3 {
+        stroke-dasharray: 8;
+    }
+    .content {
+        position: relative;
+        width: 80vw;
+        z-index: 1;
+        padding: 32px 48px;
+        background: var(--color--background);
+        border: 6px solid var(--color--sky);
+    }
     .heading {
-        font-family: 'Inter', sans-serif;
-        font-size: ${sanitizeHtml(fontSize)};
+        margin: 0;
+        font-family: "ETC Trispace", monospace;
+        font-size: 64px;
         font-style: normal;
-        color: ${foreground};
-        line-height: 1.8;
+        line-height: 1.2;
+    }
+    .tagline {
+        margin: 1em 0 0;
+        font-size: 24px;
+    }
+    .link {
+        margin: 0;
+        font-size: 18px;
+        text-align: right;
+        text-decoration: underline;
+        text-decoration-color: var(--color--gold);
     }`;
 }
 
 export function getHtml(parsedReq: ParsedRequest) {
-    const { text, theme, md, fontSize, images, widths, heights } = parsedReq;
+    const { theme, title, text } = parsedReq;
+    let content = '';
+    if ( text.length > 0 ) {
+        content = `<p class="tagline">${text.map(txt => emojify(sanitizeHtml(txt))).join('<br />')}</p>`;
+    }
     return `<!DOCTYPE html>
-<html>
+<html class="theme-${theme}">
     <meta charset="utf-8">
     <title>Generated Image</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        ${getCss(theme, fontSize)}
+        ${getCss(theme)}
     </style>
     <body>
         <div>
-            <div class="spacer">
-            <div class="logo-wrapper">
-                ${images.map((img, i) =>
-                    getPlusSign(i) + getImage(img, widths[i], heights[i])
-                ).join('')}
-            </div>
-            <div class="spacer">
-            <div class="heading">${emojify(
-                md ? marked(text) : sanitizeHtml(text)
-            )}
+            ${backgroundSvg}
+            <div class="content">
+                <h1 class="heading">${emojify(sanitizeHtml(title))}</h1>
+                ${content}
+                <p class="link">ryelle.codes</p>
             </div>
         </div>
     </body>
 </html>`;
-}
-
-function getImage(src: string, width ='auto', height = '225') {
-    return `<img
-        class="logo"
-        alt="Generated Image"
-        src="${sanitizeHtml(src)}"
-        width="${sanitizeHtml(width)}"
-        height="${sanitizeHtml(height)}"
-    />`
-}
-
-function getPlusSign(i: number) {
-    return i === 0 ? '' : '<div class="plus">+</div>';
 }
