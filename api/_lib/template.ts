@@ -42,6 +42,8 @@ function getCss(theme: string) {
         --color--blue: #20599e;
         --color--navy: #000650;
         --color--text: var(--color--navy);
+
+        font-size: clamp(8px, 2.6666px + 1.3333vw, 16px);
     }
     html.theme-dark {
         --color--sky: #d49145;
@@ -96,24 +98,25 @@ function getCss(theme: string) {
         position: relative;
         width: 80vw;
         z-index: 1;
-        padding: 32px 48px;
+        padding: 2rem 3rem;
         background: var(--color--background);
         border: 6px solid var(--color--sky);
+        box-sizing: border-box;
     }
     .heading {
         margin: 0;
         font-family: "ETC Trispace", monospace;
-        font-size: 64px;
+        font-size: 4rem;
         font-style: normal;
         line-height: 1.2;
     }
     .tagline {
         margin: 1em 0 0;
-        font-size: 24px;
+        font-size: 1.5rem;
     }
     .link {
         margin: 0;
-        font-size: 18px;
+        font-size: 1.125rem;
         text-align: right;
         text-decoration: underline;
         text-decoration-color: var(--color--gold);
