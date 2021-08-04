@@ -11,7 +11,7 @@ const ibmPlexSansItalic = readFileSync(`${__dirname}/../_fonts/IBMPlexSansVar-It
 const ibmPlexSans = readFileSync(`${__dirname}/../_fonts/IBMPlexSansVar-Roman.woff2`).toString('base64');
 const backgroundSvg = readFileSync(`${__dirname}/../_svgs/dashed.svg`).toString('utf8');
 
-function getCss(theme: string) {
+function getCss() {
     return `
     @font-face {
         font-family: 'ETC Trispace';
@@ -135,7 +135,7 @@ export function getHtml(parsedReq: ParsedRequest) {
     <title>Generated Image</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        ${getCss(theme)}
+        ${getCss()}
     </style>
     <body>
         <div>
